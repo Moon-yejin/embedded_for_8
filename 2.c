@@ -1,6 +1,7 @@
+#include <stdio.h>
 #include "myProject.h"
-int printMyName2(void)
+
+void printMyName2(void)
 {
-	printf("2. my name is somyeong\n");
-	return 1;
+	printf("2. my name is 김소명 \n");
 }
