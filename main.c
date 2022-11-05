@@ -6,4 +6,5 @@ int main (void)
 	printf ("Chief name is 문예진 \n");
 	printMyName1();
 	printMyName2();
+	printMyName3();
 }
