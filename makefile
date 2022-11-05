@@ -1,5 +1,5 @@
-final.elf : 1.o 2.o main.o myProject.h
-	gcc 1.o 2.o main.o myProject.h -o final.elf
+final.elf : 1.o 2.o 3.o main.o myProject.h
+	gcc 1.o 2.o 3.o main.o myProject.h -o final.elf
 
 main.o : main.c myProject.h
 	gcc -c -o main.o main.c
@@ -9,3 +9,6 @@ main.o : main.c myProject.h
 
 2.o : 2.c myProject.h
 	gcc -c -o 2.o 2.c
+
+3.o : 3.c myProject.h
+	gcc -c -o 3.o 3.c
