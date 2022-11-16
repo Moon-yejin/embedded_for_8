@@ -1,14 +1,10 @@
-final.elf : 1.o 2.o 3.o main.o myProject.h
-	gcc 1.o 2.o 3.o main.o myProject.h -o final.elf
+obj-m := hello_drv.o
+KDIR := /home/yejin/targetSrc/linux_kernel/
+PWD := $(shell pwd)
 
-main.o : main.c myProject.h
-	gcc -c -o main.o main.c
+export ARCH = arm
+export CROSS_COMPILE = arm-linux-gnueabi-
+all:
+	$(MAKE) -C $(KDIR) SUBDIRS = $(PWD) modules
 
-1.o : 1.c myProject.h
-	gcc -c -o 1.o 1.c
 
-2.o : 2.c myProject.h
-	gcc -c -o 2.o 2.c
-
-3.o : 3.c myProject.h
-	gcc -c -o 3.o 3.c
