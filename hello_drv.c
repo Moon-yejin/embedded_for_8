@@ -9,26 +9,14 @@
 
 static int hello_open (struct inode *node, struct file *pfile)
 {
-	printk("hello_open enter! \r \n");
+	printk(" hello_open enter! \n");
 	return 0;
 }
 
-static ssize_t hello_read(struct file *pfile, char __user *pBuff, size_t size, loff_t *filepos)
+static ssize_t hello_write(struct file *pfile, const char __user *pBuff, size_t size, loff_t *filepos)
 {
-	char arrData[4] = {'1','2','3','4'};
-	printk ("hello_read enter! \r \n");
-	if (size >= 4)
-	{
-		copy_to_user(pBuff, arrData, 4);
-		return 4;
-	}
-	return 0;
-}
-
-static ssize_t hello_write(struct file *pfile, char __user *pBuff, size_t size, loff_t *filepos)
-{
-        char arrData[4];
-        printk ("hello_write enter! \r \n");
+        char arrData[4] = {'1','2','3','4'};
+        printk (" hello_write enter! \n");
         if (size >= 4)
         {
                 copy_from_user(arrData, pBuff, 4);
@@ -37,19 +25,35 @@ static ssize_t hello_write(struct file *pfile, char __user *pBuff, size_t size, 
         return 0;
 }
 
-static int hello_release(struct inode *node, struct file *pfile)
+
+static ssize_t hello_read(struct file *pfile, char __user *pBuff, size_t size, loff_t *filepos)
 {
-	printk("hello_release enter! \r \n");
+	char arrData[4];
+	printk (" hello_read enter! \n");
+	if (size >= 4)
+	{
+		copy_to_user(pBuff, arrData, 4);
+		return 4;
+	}
 	return 0;
 }
 
 // IO CONTROL 추가
 static char array[2000];
 
-static long dev_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
+static long hello_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 {
-	int count = 0; // N byte
+	int count = 5; // N byte
 	int k = 0;
+	for (k=0; k < 8; k++)
+        {
+                int request = 1 << k;
+                unsigned int inputCmd = _IO(0x88, request);
+                printk ("Received CMD: %d -> 0x%08x \n", request, inputCmd);
+//              unsigned long returnValue = ioctl(fd, inputCmd, 0);
+        }
+
+
 	if (_IOC_TYPE (cmd) != 0x88)
 	{
 		printk ("Wrong Majic number! \r \n");
@@ -57,21 +61,32 @@ static long dev_ioctl (struct file *filp, unsigned int cmd, unsigned long arg)
 	}
 	switch (_IOC_NR (cmd))
 	{
-		case 89: printk ("-> %d \r \n", _IOC_SIZE (cmd));
+		case 89: printk (" IOCTL Size: %d \n", _IOC_SIZE (cmd)); // should be 20
 			 copy_from_user(array, arg, _IOC_SIZE (cmd));
+			 /*
+			 for (k=0; k < count; k++)
+                         {
+                                 printk ("%d", array[k]);
+                         }*/
 			 break;
 
-		case 88: printk ("-> %d \r \n", _IOC_SIZE (cmd));
+		case 88: printk (" IOCTL Size: %d \n", _IOC_SIZE (cmd)); // should be 4
 			 copy_from_user(&count, arg, _IOC_SIZE (cmd));
+			 // N Byte 출력
 			 for (k=0; k < count; k++)
 			 {
 				 printk ("%d", array[k]);
-				 printk ("\r \n");
 				 break;
 			 }
 
 		default: break;
 	}
+}
+
+static int hello_release(struct inode *node, struct file *pfile)
+{
+        printk(" hello_release enter! \n");
+        return 0;
 }
 
 static const struct file_operations hello_fops = {

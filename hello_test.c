@@ -15,37 +15,45 @@ int main (int argc, char **argv)
 {
 	char data[4] = {'5','6','7','8'};
 	int fd;
-	printf ("enter test! \r \n");
+	printf ("enter test! \n");
 
 	fd = open ("/dev/hello1", O_RDWR);
 	if (fd < 0)
 	{
-		printf ("OPEN FAIL \r \n");
-		perror ("driver (/dev/hello1) open error! \r \n");
+		printf ("OPEN FAIL \n");
+		perror ("driver (/dev/hello1) open error! \n");
 		return 1;
 	}
-	printf ("OPEN SUCCESS! \r \n");
+	printf ("OPEN SUCCESS! \n");
+	printf ("read value: ");
+
+	char array [20];
+        unsigned int inputCmd = _IOWR(0x88, 89, array);
+        unsigned long returnValue = ioctl (fd, inputCmd, array);
+
+        inputCmd = _IOWR(0x88, 88, int);
+        int count = 4; // 4 바이트 읽고 쓰기
+        returnValue = ioctl (fd, inputCmd, &count);
+
+	for (int i=0; i < count; i++)
+        {
+                 printf ("%d", data[i]);
+        }
+	printf ("\n");
 
 	// application
 	for (int k=0; k < 8; k++)
 	{
 		int request = 1 << k;
 		unsigned int inputCmd = _IO(0x88, request);
-		printf ("Enter CMD: %d -> 0x%08x \t", request, inputCmd);
+		printf ("Enter CMD: %d -> 0x%08x \n", request, inputCmd);
 		unsigned long returnValue = ioctl(fd, inputCmd, 0);
 	}
 
-	char array [20];
-	unsigned int inputCmd = _IOWR(0x88, 89, array);
-	unsigned long returnValue = ioctl (fd, inputCmd, array);
-
-	inputCmd = _IOWR(0x88, 88, int);
-	int count = 5;
-	returnValue = ioctl (fd, inputCmd, &count);
-
+	
 //	write (fd, &data, 4);
 //	read (fd, data, 4);
-//	printf ("read value: %d %d %d %d \r \n", data[0], data[1], data[2], data[3]);
+//	printf ("read value: %d %d %d %d \n", data[0], data[1], data[2], data[3]);
 	close (fd);
 	return 0;
 }
