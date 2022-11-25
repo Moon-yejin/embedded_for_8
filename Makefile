@@ -1,11 +1,8 @@
-obj-m := hello_drv.o
-KDIR := /home/yejin/linux_kernel/
-PWD := $(shell pwd)
-
-export ARCH = arm
-export CROSS_COMPILE = arm-linux-gnueabi-
-
-all:
-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
-
-
+all: libMyPeri.a
+	libMyPeri.a: led.o button.o buzzer.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o
+	
+button.o: button.h button.c
+	arm-linux-gnueabi-gcc -c buzzer.c -o buzzer.o
+led.o: led.h led.c
+	arm-linux-gnueabi-gcc -c led.c -o led.o
