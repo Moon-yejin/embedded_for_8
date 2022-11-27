@@ -9,19 +9,19 @@
 
 #define MAX_SCALE_STEP 8
 #define BUZZER_BASE_SYS_PATH "/sys/bus/platform/devices/"
-#define BUZZER_FILENAME "peribuzzer"
+#define BUZZER_FILENAME "peribuzzer.27"
 #define BUZZER_ENABLE_NAME "enable"
 #define BUZZER_FREQUENCY_NAME "frequency"
 
 char gBuzzerBaseSysDir[128]; // peribuzzer.XX가 결정
 const int musicScale[MAX_SCALE_STEP] = {262, /*do*/ 294, 330, 349, 392, 440, 494, /*si*/ 523};
-// int freIndex;
-const int fd = 0;
+// int freIndeX
+int fd = 0;
 
 void buzzerEnable(int bEnable)
 {
 	char path[200];
-	sprintf(path, "%s %s", gBuzzerBaseSysDir, BUZZER_ENABLE_NAME);
+	sprintf(path, "%s%s", gBuzzerBaseSysDir, BUZZER_ENABLE_NAME);
 	int fd = open (path, O_WRONLY);
 	if(bEnable)
 	{
@@ -37,9 +37,10 @@ void buzzerEnable(int bEnable)
 int setFrequency(int frequency)
 {
 	char path[200];
-	sprintf(path, "%s %s", gBuzzerBaseSysDir, BUZZER_FREQUENCY_NAME);
+	sprintf(path, "%s%s", gBuzzerBaseSysDir, BUZZER_FREQUENCY_NAME);
 	int fd = open (path, O_WRONLY);
 	dprintf(fd, "%d", frequency);
+//	write(fd, frequency, 1);
 	close(fd);
 }
 
@@ -57,10 +58,10 @@ int buzzerInit(void)
 			{
 				break;
 			}
-			if (strncasecmp(BUZZER_FILENAME, dir_entry -> d_name, strlen(BUZZER_FILENAME)) == 0)
+			if (strncasecmp(BUZZER_FILENAME, dir_entry->d_name, strlen(BUZZER_FILENAME)) == 0)
 			{
 				ifNotFound = 0;
-				sprintf(gBuzzerBaseSysDir, "%s %s", BUZZER_BASE_SYS_PATH, dir_entry -> d_name);
+				sprintf(gBuzzerBaseSysDir, "%s%s/", BUZZER_BASE_SYS_PATH, dir_entry->d_name);
 			}
 		}
 	}
