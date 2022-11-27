@@ -15,7 +15,7 @@
 
 char gBuzzerBaseSysDir[128]; // peribuzzer.XX가 결정
 const int musicScale[MAX_SCALE_STEP] = {262, /*do*/ 294, 330, 349, 392, 440, 494, /*si*/ 523};
-int freIndex;
+// int freIndex;
 const int fd = 0;
 
 void buzzerEnable(int bEnable)
@@ -34,7 +34,7 @@ void buzzerEnable(int bEnable)
 	close(fd);
 }
 
-void setFrequency(int frequency)
+int setFrequency(int frequency)
 {
 	char path[200];
 	sprintf(path, "%s %s", gBuzzerBaseSysDir, BUZZER_FREQUENCY_NAME);
@@ -70,7 +70,7 @@ int buzzerInit(void)
 
 int buzzerPlaySong(int scale)
 {
-	setFrequency(musicScale[freIndex -1]); // 주파수 대입
+	setFrequency(musicScale[scale -1]); // 주파수 대입
 	buzzerEnable(1);
 }
 
