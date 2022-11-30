@@ -6,21 +6,12 @@
 
 int main(void)
 {
-	ColorLedInit(0, 0);
+	ColorLedInit(100, 0, 0);
 	sleep(1);
-	ColorLedExit();
 
-	ColorLedInit(0, 1);
+	ColorLedInit(0, 100, 0);
 	sleep(1);
-        ColorLedExit();
 
-	ColorLedInit(0, 2);
+	ColorLedInit(0, 0, 100);
 	sleep(1);
-        ColorLedExit();
-
-//	ColorLedInit(0, 0);
-//	ColorLedInit(0, 1);
-//	ColorLedInit(0, 2);
-//	sleep(1);
-//        ColorLedExit();
 }

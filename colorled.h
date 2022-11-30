@@ -10,7 +10,7 @@ int pwmRedON(void);
 int pwmGreenON(void);
 int pwmBlueON(void);
 
-int ColorLedInit(int percent, int ledColor);
+int ColorLedInit(int blue_percent, int green_percent, int red_percent);
 void ColorLedExit(void);
 
 #endif

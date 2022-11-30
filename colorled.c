@@ -110,36 +110,7 @@ int pwmSetPercent(int percent, int ledColor)
    	return 0;
 }
 
-
-int pwmRedON(void)
-{
-	int fd =0;
-	fd = open (COLOR_LED_DEV_R_ PWM_ENABLE, O_WRONLY);
-	write (fd, &"1", 1);
-	close(fd);
-//	return 1;
-}
-
-int pwmGreenON(void)
-{
-	int fd =0;
-        fd = open (COLOR_LED_DEV_G_ PWM_ENABLE, O_WRONLY);
-        write (fd, &"1", 1);
-	close(fd);
-//	return 1;
-}
-
-int pwmBlueON(void)
-{
-	int fd=0;
-        fd = open (COLOR_LED_DEV_B_ PWM_ENABLE, O_WRONLY);
-        write (fd, &"1", 1);
-	close(fd);
-//	return 1;
-}
-
-
-/*int pwmStartAll(void)
+int pwmStartAll(void)
 {
 	int fd =0;
 	fd = open (COLOR_LED_DEV_R_ PWM_ENABLE, O_WRONLY);
@@ -154,44 +125,30 @@ int pwmBlueON(void)
         write (fd, &"1", 1);
 	close(fd);
 	return 1;
-}*/
+}
 
-int ColorLedInit(int percent, int ledColor)
+int ColorLedInit(int blue_percent, int green_percent, int red_percent)
 {
    	pwmActiveAll();
 
 
-	pwmSetDuty(0, 0); //R->0
+	pwmSetDuty(0, 0); //B->0
    	pwmSetDuty(0, 1); //G->0
-   	pwmSetDuty(0, 2); //B->0
+   	pwmSetDuty(0, 2); //R->0
 
    	pwmSetPeriod(PWM_PERIOD_NS, 0);
    	pwmSetPeriod(PWM_PERIOD_NS, 1);
    	pwmSetPeriod(PWM_PERIOD_NS, 2);
 
-   	pwmSetPercent(percent, ledColor);
-   	if (ledColor == 0)
-   	{
-      		pwmRedON();
-   	}
+	pwmStartAll();
 
-   	else if (ledColor == 1)
-   	{
-      		pwmGreenON();
-   	}
-
-   	else if (ledColor == 2)
-   	{
-      		pwmBlueON();
-   	}
-
-   	else printf ("LED COLOR ERROR! \n");
-
-//  	pwmStartAll();
-   	return 0;
+   	pwmSetPercent(blue_percent, 0);
+	pwmSetPercent(green_percent, 1);
+	pwmSetPercent(red_percent, 2);
 }
 
 void ColorLedExit(void)
 {
    	pwmInactiveAll();
+	return 0;
 }
