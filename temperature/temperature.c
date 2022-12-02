@@ -38,25 +38,28 @@ char *spi_read_lm74(int file)
 	return gbuf;
 }
 
-void read_teamperature(void)
+void read_temperature(void)
 {
-	char *buffer;
-	int file;
-	file = spi_init("/dev/spidev1.0");
-	buffer = (char*)spi_read_lm74(file);
-	close(file);
-
-	int value = 0;
-	value = (buffer[1] >> 3);
-	value += ((int)(buffer[0])) << 5;
-	if(buffer[0] & 0x80)
+	while(1)
 	{
-		int i=0;
-		for(i=31; i>12; i--)
-		value |= (1<<i);
-	}
+		char *buffer;
+		int file;
+		file = spi_init("/dev/spidev1.0");
+		buffer = (char*)spi_read_lm74(file);
+		close(file);
 
-	double temp = (double)value*0.0625;
-	printf("Current Temp: %lf \n", temp);
-	return 0;
+		int value = 0;
+		value = (buffer[1] >> 3);
+		value += ((int)(buffer[0])) << 5;
+		if(buffer[0] & 0x80)
+		{
+			int i=0;
+			for(i=31; i>12; i--)
+			value |= (1<<i);
+		}
+
+		double temp = (double)value*0.0625;
+		printf("Current Temp: %lf \n", temp);
+		sleep(1);
+	}
 }
