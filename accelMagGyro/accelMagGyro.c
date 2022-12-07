@@ -49,10 +49,10 @@ int getAcc(void)
 
 int getMag(void)
 {
-	fp = fopen (GYROPATH "data", "rt");
-	int gyro[3];
-	fscanf(fp,"%d, %d, %d",&gyro[0],&gyro[1],&gyro[2]);
-	printf ("I read Gyroscope %d, %d, %d\r\n",gyro[0],gyro[1],gyro[2]);
+	fp = fopen (MAGNEPATH "data", "rt");
+	int magne[3];
+	fscanf(fp,"%d, %d, %d",&magne[0],&magne[1],&magne[2]);
+	printf ("I read Magneto %d, %d, %d\r\n",magne[0],magne[1],magne[2]);
 	fclose(fp);
 	return 0;
 }
