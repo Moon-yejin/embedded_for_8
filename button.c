@@ -105,7 +105,7 @@ void buttonThFunc(void)
 			//		bitmainfunc("water.bmp");
 					ledOnOff(count, 1);
 					ledStatus();
-				//	count  = count + 1;
+					count  = count + 1;
 				//	return count;
 					break;
 			}			
@@ -118,7 +118,6 @@ void buttonThFunc(void)
                         else
 			{
                                 printf("Drink water! \n"); 
-				count = count+1;
 			}
                 }
                 else
