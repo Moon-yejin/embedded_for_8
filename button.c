@@ -10,6 +10,8 @@
 #include "button.h"
 #include "bitmap.h"
 #include "led.h"
+#include "colorled.h"
+#include "textlcd.h"
 
 #define INPUT_DEVICE_LIST "/dev/input/event"
 #define PROBE_FILE "/proc/bus/input/devices"
@@ -18,7 +20,12 @@
 
 pthread_t buttonTh_1;
 int fd = 0;
+
+// count는 총 마신 물의 잔 수로 led 변수
 int count = 0;
+
+// count_water는 color led 변수
+int count_water = 0;
 int msgID;
 
 int probeButtonPath(char *newPath)
@@ -70,20 +77,26 @@ void buttonThFunc(void)
                         {
 				// START SCREEN 출력
 				case KEY_HOME:
+				//	bitmainfunc("start.bmp");
+					TextInit(1, " HI ");
+                                        TextInit(2, " 8 ");
 					bitmainfunc("start.bmp");
-					sleep(5);
+
 					break;
 
 				// FINISH SCREEN 출력
                                 case KEY_BACK:
                                         bitmainfunc("end.bmp");
+					TextInit(1, "GOOD");
+                                        TextInit(2, "BYE!");
+					printf ("HAVE A HEALTHY DAY!");
 					break;
 
 				// 스쿼트 화면 출력
                                 case KEY_SEARCH:
-                //                        bitmainfunc("squat1.bmp");
+                                        bitmainfunc("squat1.bmp");
 					fitness();
-		//		        bitmainfunc("rest2.bmp");
+				        bitmainfunc("rest2.bmp");
 					break;
 
 				// 런지 화면 출력
@@ -96,17 +109,75 @@ void buttonThFunc(void)
 				// 어깨운동 화면 출력
                                 case KEY_VOLUMEUP:
 					bitmainfunc("handle.bmp");
-//					fitness();
-//					bitmainfunc("rest2.bmp");
+				//	TextInit(1, " NO ");
+				//	TextInit(2, "REST");
+				//	fitness();
+				//	bitmainfunc("rest2.bmp");
 					break;
 
-				// 물 마실때마다 누르면 LED 하나씩 ON
+				// 마신 물의 잔 수
                                 case KEY_VOLUMEDOWN:
-			//		bitmainfunc("water.bmp");
-					ledOnOff(count, 1);
-					ledStatus();
-					count  = count + 1;
-				//	return count;
+					bitmainfunc("water.bmp");
+
+					if(count_water == 0 & count == 0)
+					{
+						TextInit(1, "Num ");
+                                        	TextInit(2, " 1 ");
+						ledOnOff(0,1);
+						ColorLedInit(0, 0, 100); // red
+					}
+					else if (count_water == 2 & count == 2)
+					{
+                                        	TextInit(1, "Num ");
+                                        	TextInit(2, " 2 ");
+						ledOnOff(1,1);
+						ColorLedInit(100, 0, 100); // magenta
+					}
+					else if (count_water == 4 && count == 4)
+					{
+                                        	TextInit(1, "Num ");
+                                        	TextInit(2, " 3 ");
+						ledOnOff(2,1);
+						ColorLedInit(100, 0, 0); // blue
+					}
+					else if (count_water == 6 && count == 6)
+					{
+	                                        TextInit(1, "Num ");
+        	                                TextInit(2, " 4 ");
+						ledOnOff(3,1);
+						ColorLedInit(100, 100, 0); // cyan
+					}
+					else if (count_water == 8 && count == 8)
+					{
+        	                                TextInit(1, "Num ");
+	                                        TextInit(2, " 5 ");
+						ledOnOff(4,1);
+						ColorLedInit(0, 100, 0); // green
+					}
+                                        else if (count_water == 10 && count == 10)
+                                        {
+	                                        TextInit(1, "Num ");
+	                                        TextInit(2, " 6 ");
+                                                ledOnOff(5,1);
+                                                ColorLedInit(0, 100, 100); // yellow
+                                        }
+                                        else if (count_water == 12 && count == 12)
+                                        {
+	                                        TextInit(1, "Num ");
+                                        	TextInit(2, " 7 ");
+                                                ledOnOff(6,1);
+                                                ColorLedInit(50, 100, 100); // yellow와 white 그 어딘가
+                                        }
+                                        else if (count_water >= 14 && count >= 14)
+                                        {
+	                                        TextInit(1, "GOOD");
+						TextInit(2, " 8 ");
+                                                ledOnOff(7,1);
+                                                ColorLedInit(100, 100, 100); // white
+                                        }
+
+					count_water++;
+					count++;
 					break;
 			}			
                  
